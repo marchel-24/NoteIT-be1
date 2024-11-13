@@ -19,4 +19,8 @@ const mainRouter = makeMainRouter();
 
 app.use("/", mainRouter);
 
+// Implementing the error handler
+const errorHandler = require("./middlewares/error");
+app.use(errorHandler);
+
 module.exports = app;
