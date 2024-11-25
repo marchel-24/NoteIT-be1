@@ -85,10 +85,22 @@ const deleteTask = async (req, res) => {
   }
 };
 
+// Get all tasks, sorted by the closest deadline
+const sortTaskbydateasc = async (req, res) => {
+  try {
+    const tasks = await Task.find().sort({ deadline: 1 }); // Sort by deadline in ascending order
+    res.status(200).json({ success: true, tasks });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+
 module.exports = {
   createTask,
   getTasks,
   getTaskById,
   updateTask,
   deleteTask,
+  sortTaskbydateasc
 };
