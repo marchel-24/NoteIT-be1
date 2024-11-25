@@ -1,24 +1,31 @@
 const Task = require("../models/task");
+const mongoose = require('mongoose');
 
 // Create a new task
-const createTask = async (req, res) => {
+const createTask = async (req, res, next) => {
+  const { title, deadline, description, image, status } = req.body;
+
+  // Validasi input
+  if (!title || !deadline) {
+    return next(new Error("Title and deadline are required"));
+  }
+
   try {
-    const { title, deadline, description, image, status } = req.body;
-
-    const task = new Task({
-      title,
-      deadline,
-      description,
-      image,
-      status,
-    });
-
+    // Buat task baru
+    const task = new Task({ title, deadline, description, image, status });
     await task.save();
-    res.status(201).json({ success: true, message: "Task created successfully", task });
+
+    // Respons sukses
+    res.status(201).json({
+      success: true,
+      message: "Task created successfully",
+      task,
+    });
   } catch (error) {
-    res.status(400).json({ success: false, message: error.message });
+    next(error); // Teruskan error ke middleware berikutnya
   }
 };
+
 
 // Get all tasks
 const getTasks = async (req, res) => {
@@ -30,43 +37,77 @@ const getTasks = async (req, res) => {
   }
 };
 
-// Get a single task by ID
-const getTaskById = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const task = await Task.findById(id);
+const getTaskById = async (req, res, next) => {
+  const { id } = req.params;
 
-    if (!task) {
-      return res.status(404).json({ success: false, message: "Task not found" });
-    }
-
-    res.status(200).json({ success: true, task });
-  } catch (error) {
-    res.status(400).json({ success: false, message: error.message });
+  // Validasi apakah ID valid
+  if (!mongoose.isValidObjectId(id)) {
+    return res.status(400).json({
+      success: false,
+      message: "Invalid ID format",
+    });
   }
-};
 
-// Update a task by ID
-const updateTask = async (req, res) => {
   try {
+    // Cari task berdasarkan ID
+    const task = await Task.findById(id);
+    if (!task) {
+      return res.status(404).json({
+        success: false,
+        message: "Task not found",
+      });
+    }
+      res.status(200).json({
+        success: true,
+        task,
+      });
+    } catch (error) {
+      // Teruskan error ke middleware errorHandler
+      next(error);
+    }
+  };
+
+
+  const updateTask = async (req, res, next) => {
     const { id } = req.params;
     const { title, deadline, description, image, status } = req.body;
-
-    const updatedTask = await Task.findByIdAndUpdate(
-      id,
-      { title, deadline, description, image, status },
-      { new: true, runValidators: true }
-    );
-
-    if (!updatedTask) {
-      return res.status(404).json({ success: false, message: "Task not found" });
+  
+    // Validasi apakah ID valid
+    if (!mongoose.isValidObjectId(id)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid ID format",
+      });
     }
+  
+    try {
+      // Mencari dan memperbarui task berdasarkan ID
+      const updatedTask = await Task.findByIdAndUpdate(
+        id,
+        { title, deadline, description, image, status },
+        { new: true, runValidators: true }
+      );
+  
+      // Jika task tidak ditemukan, beri respons 404
+      if (!updatedTask) {
+        return res.status(404).json({
+          success: false,
+          message: "Task not found",
+        });
+      }
+  
+      // Respons sukses
+      res.status(200).json({
+        success: true,
+        message: "Task updated successfully",
+        task: updatedTask,
+      });
+    } catch (error) {
+      // Teruskan error ke middleware errorHandler
+      next(error);
+    }
+  };
 
-    res.status(200).json({ success: true, message: "Task updated successfully", task: updatedTask });
-  } catch (error) {
-    res.status(400).json({ success: false, message: error.message });
-  }
-};
 
 // Delete a task by ID
 const deleteTask = async (req, res) => {
