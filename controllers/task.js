@@ -95,6 +95,15 @@ const sortTaskbydateasc = async (req, res) => {
   }
 };
 
+const sortTaskByDateDesc = async (req, res) => {
+  try {
+    const tasks = await Task.find().sort({ deadline: -1 }); // Sort by deadline in descending order
+    res.status(200).json({ success: true, tasks });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
 
 module.exports = {
   createTask,
@@ -102,5 +111,6 @@ module.exports = {
   getTaskById,
   updateTask,
   deleteTask,
-  sortTaskbydateasc
+  sortTaskbydateasc,
+  sortTaskByDateDesc
 };

@@ -5,6 +5,7 @@ const {
   updateTask,
   deleteTask,
   sortTaskbydateasc,
+  sortTaskByDateDesc,
 } = require("../controllers/task");
 
 const asyncWrapper = require("../utils/wrapper");
@@ -16,4 +17,5 @@ module.exports = (router) => {
   router.put("/tasks/:id", asyncWrapper(updateTask));     
   router.delete("/tasks/:id", asyncWrapper(deleteTask));  
   router.get("/task/sortbydateasc",asyncWrapper(sortTaskbydateasc))
+  router.get("/task/sortdescbydate", asyncWrapper(sortTaskByDateDesc))
 };
