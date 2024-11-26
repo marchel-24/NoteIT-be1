@@ -34,7 +34,10 @@ const getTasks = async (req, res) => {
     // Build the query object to include either _id or title (or both)
     const query = {};
     if (id) query._id = id;
-    if (title) query.title = { $regex: title, $options: "i" }; // Case-insensitive search on title
+    if (title) query.title = { $regex: title, $options: "i" };
+    query.userId = req.user._id.toString();
+
+    console.log(query);
 
     const tasks = await Task.find(query);
     res.status(200).json(tasks);

@@ -1,9 +1,8 @@
-const User = require("../models/userModels");
+const User = require("../models/user");
 const jwt = require("jsonwebtoken");
 
 exports.verifyUser = async (req, res, next) => {
   const token = req.cookies.jwt;
-
   if (!token) {
     return res.status(403).json({
       message: "missing credential",
@@ -17,13 +16,13 @@ exports.verifyUser = async (req, res, next) => {
     });
   }
 
-    const user = await User.findById(decode);
+  const user = await User.findById(decode);
 
-    if (!user) {
-      return res.status(403);
-    }
+  if (!user) {
+    return res.status(403);
+  }
 
-    req.user = user;
+  req.user = user;
 
   next();
 };

@@ -11,6 +11,7 @@ const getNotes = async (req, res) => {
   const query = {};
   if (id) query._id = id;
   if (title) query.title = { $regex: title, $options: "i" }; // Case-insensitive search on title
+  query.userId = req.user._id.toString();
 
   const notes = await Note.find(query);
   res.status(200).json(notes);
