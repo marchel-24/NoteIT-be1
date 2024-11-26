@@ -143,28 +143,23 @@ exports.googleCallback = async(req, res) => {
     if(data){
         const email = data.email;
         console.info(data.email);
-        const user = await User.findOne({ email });
+        let user = await User.findOne({ email });
+        console.log(user)
         if (!user) {
-
-            const user = new User({
-                email : email,
-                password : undefined
+            user = new User({
+                email : email
               });
-              user
-                .save()
-                .then(() => {
-                  res.status(200).json({
-                    message: "User created successfully!",
-                    data: email
-                  });
-                })
-                .catch((err) => {
-                  res.status(400).json({
-                    error: err
-                  });
-                });
-        }
+              await user.save()
 
+                return res.sendStatus(200);
+
+
+                };
+
+            console.info(user);
+      }
+
+      console.info(user);
         const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET_KEY);
         res.cookie("jwt", token, {
           expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
@@ -183,5 +178,5 @@ exports.googleCallback = async(req, res) => {
             email: user.email,
           },
         });
-    }
-}
+      }
+        
