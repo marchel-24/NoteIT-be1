@@ -5,7 +5,6 @@ const taskSchema = new mongoose.Schema(
     title: {
       type: String,
       required: true,
-      unique: true,
     },
     deadline: {
       type: Date,
@@ -13,7 +12,6 @@ const taskSchema = new mongoose.Schema(
     },
     description: {
       type: String,
-      required: true,
     },
     image: {
       type: String,

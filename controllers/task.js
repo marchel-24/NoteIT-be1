@@ -29,7 +29,10 @@ const createTask = async (req, res, next) => {
 // Get all tasks
 const getTasks = async (req, res) => {
   try {
-    const tasks = await Task.find();
+    const { id } = req.query;
+    const query = id ? { _id: id } : {};
+
+    const tasks = await Task.find(query);
     res.status(200).json(tasks);
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
