@@ -9,6 +9,7 @@ const {
   const asyncWrapper = require("../utils/wrapper");
   
 module.exports = (router) => {
+    router.post("/auth/signup", asyncWrapper(createUser));
     router.post("/auth/login", asyncWrapper(login));        
     router.post("/auth/delete", asyncWrapper(deleteUser));  
     router.get("/auth/google", asyncWrapper(googleLogin));
