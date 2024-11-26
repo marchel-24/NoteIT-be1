@@ -5,7 +5,6 @@ const taskSchema = new mongoose.Schema(
     title: {
       type: String,
       required: true,
-      unique: true,
     },
     deadline: {
       type: Date,
@@ -13,7 +12,6 @@ const taskSchema = new mongoose.Schema(
     },
     description: {
       type: String,
-      required: true,
     },
     image: {
       type: String,
@@ -21,8 +19,8 @@ const taskSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["pending", "in-progress", "completed"], // Status yang diizinkan
-      default: "pending",
+      enum: ["Pending", "In-progress", "Completed"], // Status yang diizinkan
+      default: "Pending",
     },
   },
   { timestamps: true }

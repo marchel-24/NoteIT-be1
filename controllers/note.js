@@ -5,7 +5,10 @@ const sendNotes = (req, res) => {
 };
 
 const getNotes = async (req, res) => {
-  const notes = await Note.find();
+  const { id } = req.query;
+  const query = id ? { _id: id } : {};
+
+  const notes = await Note.find(query);
   res.status(200).json(notes);
 };
 
@@ -25,7 +28,9 @@ const createNote = async (req, res, next) => {
     });
 
     await note.save();
-    res.status(201).json({ success: true, message: "Note created successfully", note });
+    res
+      .status(201)
+      .json({ success: true, message: "Note created successfully", note });
   } catch (error) {
     // Pass error to middleware
     next(error);
@@ -70,8 +75,6 @@ const updateNote = async (req, res, next) => {
   }
 };
 
-
-
 const deleteNote = async (req, res) => {
   try {
     const { id } = req.params;
@@ -79,10 +82,14 @@ const deleteNote = async (req, res) => {
     const deletedNote = await Note.findByIdAndDelete(id);
 
     if (!deletedNote) {
-      return res.status(404).json({ success: false, message: "Note not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Note not found" });
     }
 
-    res.status(200).json({ success: true, message: "Note deleted successfully" });
+    res
+      .status(200)
+      .json({ success: true, message: "Note deleted successfully" });
   } catch (error) {
     res.status(400).json({ success: false, message: error.message });
   }
@@ -93,5 +100,5 @@ module.exports = {
   getNotes,
   createNote,
   updateNote,
-  deleteNote
+  deleteNote,
 };
