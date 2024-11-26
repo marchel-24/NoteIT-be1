@@ -5,8 +5,12 @@ const sendNotes = (req, res) => {
 };
 
 const getNotes = async (req, res) => {
-  const { id } = req.query;
-  const query = id ? { _id: id } : {};
+  const { id, title } = req.query;
+
+  // Build the query object to include either _id or title (or both)
+  const query = {};
+  if (id) query._id = id;
+  if (title) query.title = { $regex: title, $options: "i" }; // Case-insensitive search on title
 
   const notes = await Note.find(query);
   res.status(200).json(notes);
