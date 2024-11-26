@@ -5,14 +5,15 @@ const {
   updateNote,
   deleteNote,
 } = require("../controllers/note");
+const { verifyUser } = require("../middlewares/auth");
 const asyncWrapper = require("../utils/wrapper");
 
 module.exports = (router) => {
-  router.get("/note", asyncWrapper(getNotes));
+  router.get("/note", verifyUser, asyncWrapper(getNotes));
 
-  router.post("/note", asyncWrapper(createNote));
+  router.post("/note", verifyUser, asyncWrapper(createNote));
 
-  router.patch("/note/:id", asyncWrapper(updateNote));
+  router.patch("/note/:id", verifyUser, asyncWrapper(updateNote));
 
-  router.delete("/note/:id", asyncWrapper(deleteNote));
+  router.delete("/note/:id", verifyUser, asyncWrapper(deleteNote));
 };

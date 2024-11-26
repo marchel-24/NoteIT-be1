@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 // Create a new task
 const createTask = async (req, res, next) => {
   const { title, deadline, description, image, status } = req.body;
+  const userId = req.user._id.toString();
 
   // Validasi input
   if (!title || !deadline) {
@@ -12,7 +13,14 @@ const createTask = async (req, res, next) => {
 
   try {
     // Buat task baru
-    const task = new Task({ title, deadline, description, image, status });
+    const task = new Task({
+      title,
+      deadline,
+      description,
+      image,
+      status,
+      userId,
+    });
     await task.save();
 
     // Respons sukses

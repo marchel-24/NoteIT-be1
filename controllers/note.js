@@ -19,6 +19,7 @@ const getNotes = async (req, res) => {
 
 const createNote = async (req, res, next) => {
   const { title, payload, image } = req.body;
+  const userId = req.user._id.toString();
 
   if (!title) {
     // Panggil next dengan error
@@ -30,6 +31,7 @@ const createNote = async (req, res, next) => {
       title,
       payload,
       image,
+      userId,
     });
 
     await note.save();
