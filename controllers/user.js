@@ -179,15 +179,13 @@ exports.session = async (req, res) => {
 
   const user = await User.findById(decode);
 
-	if (!user) {
-		return res.status(400).json({
+  if (!user) {
+    return res.status(400).json({
       status: "invalid",
     });
-	}
+  }
 
   return res.status(200).json({
-		id: user._id
-	});
-
-  next();
+    id: user._id,
+  });
 };
