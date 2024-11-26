@@ -116,7 +116,6 @@ exports.login = async (req, res) => {
         message: "Login successful",
         data: {
           userId: user._id,
-          name: user.name,
           email: user.email,
         },
       });
@@ -140,26 +139,31 @@ exports.googleCallback = async(req, res) => {
 
     const {data} = await oauth2.userinfo.get();
 
+		let user;
+
     if(data){
         const email = data.email;
-        console.info(data.email);
-        let user = await User.findOne({ email });
-        console.log(user)
+
+        user = await User.findOne({ email });
+
         if (!user) {
-            user = new User({
-                email : email
-              });
-              await user.save()
+					user = new User({
+						email : email
+					});
+					
+					await user.save();
 
-                return res.sendStatus(200);
-
-
-                };
-
-            console.info(user);
+					return res.status(200).json({
+						status: "success",
+						message: "Login successful",
+						data: {
+							userId: user._id,
+							email: user.email,
+						},
+					});
+        };
       }
 
-      console.info(user);
         const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET_KEY);
         res.cookie("jwt", token, {
           expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
@@ -174,7 +178,6 @@ exports.googleCallback = async(req, res) => {
           message: "Login successful",
           data: {
             userId: user._id,
-            name: user.name,
             email: user.email,
           },
         });
