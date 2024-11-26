@@ -11,11 +11,11 @@ const {
 const asyncWrapper = require("../utils/wrapper");
 
 module.exports = (router) => {
-  router.post("/tasks/create", asyncWrapper(createTask));        
-  router.get("/tasks", asyncWrapper(getTasks));           
-  router.get("/tasks/:id", asyncWrapper(getTaskById));
-  router.put("/tasks/:id", asyncWrapper(updateTask));     
-  router.delete("/tasks/:id", asyncWrapper(deleteTask));  
-  router.get("/task/sortbydateasc",asyncWrapper(sortTaskbydateasc))
-  router.get("/task/sortdescbydate", asyncWrapper(sortTaskByDateDesc))
+  router.post("/task", asyncWrapper(createTask));
+  router.get("/task", asyncWrapper(getTasks));
+  router.get("/task/:id", asyncWrapper(getTaskById));
+  router.put("/task/:id", asyncWrapper(updateTask));
+  router.delete("/task/:id", asyncWrapper(deleteTask));
+  router.get("/task/sortbydateasc", asyncWrapper(sortTaskbydateasc));
+  router.get("/task/sortdescbydate", asyncWrapper(sortTaskByDateDesc));
 };
